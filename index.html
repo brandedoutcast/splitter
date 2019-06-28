@@ -5,11 +5,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Splitter</title>
+    <title>Splitter | Split your tweets</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: whitesmoke;
+        }
+
+        header {
+            text-align: center;
+            font-size: 2em;
+        }
+
+        main {
+            padding: 0 1em;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 480px) {
+            main {
+                max-width: 70vw;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            main {
+                max-width: 50vw;
+            }
+        }
+
+        #input {
+            margin-top: 0.5em;
+        }
+
+        textarea {
+            box-sizing: border-box;
+            border: 0;
+            border-radius: 0.5em;
+            outline: 0;
+            padding: 1em;
+            resize: none;
+            min-height: 100vmin;
+            width: 100%;
+        }
+
+        @media (min-width: 375px) {
+            textarea {
+                min-height: 90vmin;
+            }
+        }
+
+        @media (min-width: 480px) {
+            textarea {
+                min-height: 50vmin;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            textarea {
+                min-height: 35vmin;
+            }
+        }
+
+        #options {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em;
+        }
+
+        #options span {
+            text-align: center;
+            width: 3em;
+            color: #d3d3d3;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #options span.active {
+            color: #000;
+        }
+
+        #splits {
+            margin-bottom: 5em;
+            margin-top: 1em;
+        }
+
+        #splits div {
+            background-color: white;
+            margin-bottom: 1em;
+            border-radius: 0.5em;
+            padding: 1em;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Still Cooking!</h1>
+    <header>Splitter</header>
+    <main>
+        <div id="input">
+            <textarea id="tweet" placeholder="type here..."></textarea>
+            <div id="options">
+                <span data-len="6" class="active">(x/y)</span>
+                <span data-len="4">x/y</span>
+                <span data-len="3">/x</span>
+            </div>
+        </div>
+        <div id="splits"></div>
+    </main>
+
+    <script>
+        (function () {
+            let tweetEl = document.getElementById("tweet"),
+                optionsEl = document.getElementById("options"),
+                splitsEl = document.getElementById("splits")
+
+            tweetEl.oninput = split
+
+            optionsEl.addEventListener("click", function (e) {
+                if (e.target.tagName.toLowerCase() == "span") {
+                    for (const span of this.children)
+                        span.classList.remove("active")
+
+                    e.target.classList.add("active")
+                    split()
+                }
+            }, false)
+
+            function split() {
+                let tweet = tweetEl.value.trim()
+
+                if (!tweet.length) {
+                    clearSplits()
+                    return
+                }
+
+                let splits = [],
+                    suffixLength = parseInt(optionsEl.querySelector(".active").dataset.len),
+                    contentLength = 280 - suffixLength
+
+                while (tweet.length > 1) {
+                    let rawSplit = tweet.substr(0, contentLength),
+                        lastIndex = contentLength
+
+                    if (tweet.length > contentLength && tweet[contentLength].trim()) {
+                        lastIndex = rawSplit.lastIndexOf(" ")
+                    }
+
+                    tweet = tweet.substr(lastIndex).trim()
+                    splits.push(rawSplit.substr(0, lastIndex).trim())
+                }
+
+                showSplits(splits, suffixLength)
+            }
+
+            function showSplits(splits, suffix) {
+                clearSplits()
+
+                for (let i = 0; i < splits.length; i++) {
+                    const split = splits[i];
+                    let part = document.createElement("div")
+
+                    switch (suffix) {
+                        case 3:
+                            part.innerText = `${split} /${i + 1}`
+                            break
+                        case 4:
+                            part.innerText = `${split} ${i + 1}/${splits.length}`
+                            break
+                        case 6:
+                            part.innerText = `${split} (${i + 1}/${splits.length})`
+                            break
+                    }
+
+                    splitsEl.appendChild(part)
+                }
+            }
+
+            function clearSplits() {
+                while (splitsEl.firstChild)
+                    splitsEl.removeChild(splitsEl.firstChild)
+            }
+        })()
+    </script>
 </body>
 
 </html>

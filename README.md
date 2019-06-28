@@ -1,2 +1,2 @@
 # Splitter
-Still Cooking!
+Splits a single long tweet to multiple tweets
