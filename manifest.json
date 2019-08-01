@@ -1,0 +1,18 @@
+{
+    "name": "splitter - Split long tweets!",
+    "short_name": "splitter",
+    "description": "splitter - Split long tweets!",
+    "background_color": "#242424",
+    "theme_color": "#242424",
+    "display": "fullscreen",
+    "orientation": "any",
+    "start_url": "./",
+    "lang": "en",
+    "icons": [
+        {
+            "src": "logo.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ]
+}

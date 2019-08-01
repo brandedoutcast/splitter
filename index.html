@@ -3,9 +3,34 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="A Progressive Web App to split long tweets into multiple series of short ones">
+    <meta name="keywords" content="PWA, Progressive Web App, Twitter, Split, Offline, Long Tweet, Series of Tweets">
+
+    <link rel="manifest" href="manifest.json">
+
+    <meta name="theme-color" content="#242424" />
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <link rel="icon" href="logo.png" sizes="256x256">
+
+    <meta name="apple-mobile-web-app-title" content="Splitter - Split long tweets!">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-startup-image" href="logo.png">
+
+    <meta name="application-name" content="Splitter">
+    <meta name="msapplication-TileImage" content="logo.png">
+    <meta name="msapplication-TileColor" content="#242424">
+    <meta name="msapplication-tooltip" content="Split long tweets!">
+    <meta name="msapplication-starturl" content="/">
+
+    <meta name="full-screen" content="yes">
+    <meta name="browsermode" content="application">
+
     <title>Splitter | Split your tweets</title>
+
     <style>
         html,
         body {
@@ -190,6 +215,12 @@
             function clearSplits() {
                 while (splitsEl.firstChild)
                     splitsEl.removeChild(splitsEl.firstChild)
+            }
+
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("sw.js")
+                    .then(() => console.log("✨ Service Worker Registered"))
+                    .catch(e => console.error(`😭 Service Worker not Registered due to ${JSON.stringify(e)}`))
             }
         })()
     </script>
